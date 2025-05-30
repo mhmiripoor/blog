@@ -1,0 +1,38 @@
+﻿@using BoneLog.Blazor.Components
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+
+<header class="sticky top-0 z-50 bg-inherit border-b border-neutral-200 dark:border-white/10 px-6 py-4">
+    <div class="flex justify-between items-center">
+        <div class="font-serif text-2xl font-bold">
+            <a href="@Nav.BaseUri">
+                🦴 BoneLog
+            </a>
+        </div>
+
+        <!-- Mobile toggle button -->
+        <button class="lg:hidden text-2xl" @onclick="ToggleMenu">
+            @(menuOpen ? "✖" : "☰")
+        </button>
+
+
+        <!-- Desktop menu -->
+        <NavMenu CssClass="hidden lg:flex items-center space-x-6">
+            <ToggleThemeButton />
+        </NavMenu>
+    </div>
+
+    <!-- Mobile menu -->
+    <NavMenu CssClass="@($"flex flex-col items-start space-y-2 mt-4 lg:hidden {(menuOpen ? "" : "hidden")}")">
+        <ToggleThemeButton />
+    </NavMenu>
+</header>
+
+@code {
+    private bool menuOpen = false;
+
+    private void ToggleMenu() => menuOpen = !menuOpen;
+
+}
+

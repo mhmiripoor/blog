@@ -1,0 +1,105 @@
+﻿using BoneLog.Blazor.Dtos;
+using Microsoft.AspNetCore.Components;
+using System.Text.Json;
+
+namespace BoneLog.Blazor.Pages;
+
+public partial class Home: ComponentBase
+{
+    [Inject] HttpClient Http { get; set; } = default!;
+    [Inject] NavigationManager Nav { get; set; } =default!;
+
+    private List<PostIndexDto>? posts;
+    private List<PostIndexDto>? filteredPosts;
+    private int currentPage = 1;
+    private int pageCount = 0;
+    private const int itemsPerPage = 10;
+
+    private string searchQuery = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var json = await Http.GetStringAsync($"{Nav.BaseUri}data/posts.json");
+
+        posts = JsonSerializer.Deserialize<List<PostIndexDto>>(json,new JsonSerializerOptions()
+        {
+            PropertyNameCaseInsensitive = true,
+        });
+
+        if(posts != null)
+        {
+            FilterPosts();
+        }
+    }
+
+    private void FilterPosts()
+    {
+        if(string.IsNullOrWhiteSpace(searchQuery))
+        {
+            filteredPosts = posts;
+        }
+        else
+        {
+            var query = searchQuery.Trim().ToLower();
+            filteredPosts = posts?.Where(p =>
+                    (p.Title.ToLower().Contains(query)) ||
+                    (p.ShortDescription?.ToLower().Contains(query) ?? false) ||
+                    (p.Tags?.Any(tag => tag.ToLower().Contains(query)) ?? false) ||
+                    (p.Date.ToString().Contains(query))).ToList();
+        }
+
+        filteredPosts = filteredPosts?.OrderByDescending(p => p.Date).ToList();
+        pageCount = (int)Math.Ceiling((double)(filteredPosts?.Count ?? 0) / itemsPerPage);
+        currentPage = 1;
+    }
+
+    private void NextPage()
+    {
+        if(currentPage < pageCount)
+        {
+            currentPage++;
+        }
+    }
+
+    private void PrevPage()
+    {
+        if(currentPage > 1)
+        {
+            currentPage--;
+        }
+    }
+
+    private void OnPageInputChanged(ChangeEventArgs e)
+    {
+        if(int.TryParse(e.Value?.ToString(),out int val))
+        {
+            if(val >= 1 && val <= pageCount)
+            {
+                currentPage = val;
+            }
+        }
+    }
+
+    private void OnSearchInput(ChangeEventArgs e)
+    {
+        searchQuery = e.Value?.ToString() ?? "";
+        FilterPosts();
+    }
+    private async Task ReloadPosts()
+    {
+        var url = $"{Nav.BaseUri}data/posts.json?nocache={Guid.NewGuid()}";
+        var json = await Http.GetStringAsync(url);
+
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+        };
+        posts = JsonSerializer.Deserialize<List<PostIndexDto>>(json,options);
+        FilterPosts();
+    }
+    private void ClearSearch()
+    {
+        searchQuery = "";
+        FilterPosts();
+    }
+}

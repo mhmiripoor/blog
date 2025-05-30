@@ -1,0 +1,84 @@
+﻿@page "/"
+
+<div class="flex items-center mb-6 w-full max-w-full
+            border border-white
+            rounded-md
+            transition-colors duration-200
+            hover:border-white">
+    <button @onclick="ClearSearch"
+            title="Clear search input"
+            class="px-4 py-2 border border-accent rounded-l-md text-accent
+                   hover:bg-teal-500 hover:text-white
+                   focus:outline-none focus:ring-2 focus:ring-accent
+                   transition-colors duration-200 shadow-sm hover:shadow-md">
+
+        ❌
+    </button>
+    <input type="text"
+           value="@searchQuery"
+           @oninput="OnSearchInput"
+           placeholder="Search posts..."
+           class="flex-grow px-4 py-2 border border-accent bg-transparent text-inherit focus:outline-none rounded-md transition-colors duration-200" />
+
+
+    <button @onclick="ReloadPosts"
+            title="Reload posts list from server (bypass cache)"
+            class="px-4 py-2 border border-accent rounded-r-md text-accent
+                   hover:bg-teal-500 hover:text-white
+                   focus:outline-none focus:ring-2 focus:ring-accent
+                   transition-colors duration-200 shadow-sm hover:shadow-md">
+        🔄
+    </button>
+</div>
+
+
+@if(filteredPosts == null)
+{
+    <Loading />
+}
+else
+{
+    <div class="flex flex-col gap-6">
+        @foreach(var postWithIndex in filteredPosts
+                  .Skip((currentPage - 1) * itemsPerPage)
+                  .Take(itemsPerPage)
+                  .Select((post,i) => (post, i)))
+        {
+            <PostPreview Title="@postWithIndex.post.Title"
+            Description="@postWithIndex.post.ShortDescription"
+                         Url="@($"{Nav.BaseUri}post/{postWithIndex.post.FileName}")"
+                         ThumbnailUrl="@($"{Nav.BaseUri}/{postWithIndex.post.Thumbnail}")"
+                         PublishDate="@postWithIndex.post.Date"
+                         Tags="@postWithIndex.post.Tags.ToList()"
+                         ImageOnRight="@(postWithIndex.i % 2 == 1)" />
+        }
+    </div>
+    @if(filteredPosts.Count > itemsPerPage)
+    {
+        <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mt-10">
+            <button class="px-4 py-2 rounded-md border border-accent text-accent bg-transparent hover:bg-teal-500 hover:text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled="@(currentPage == 1)"
+                    @onclick="PrevPage">
+                ‹ Prev
+            </button>
+
+            <div class="flex items-center space-x-2">
+                <label for="pageInput" class="text-inherit font-medium">Page</label>
+                <input id="pageInput"
+                       type="number"
+                       min="1"
+                       max="@pageCount"
+                       value="@currentPage"
+                       @oninput="OnPageInputChanged"
+                       class="w-16 text-center rounded-md border border-neutral-300 dark:border-neutral-700 bg-transparent text-inherit placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-200 no-spin" />
+                <span class="text-inherit font-semibold">of @pageCount</span>
+            </div>
+
+            <button class="px-4 py-2 rounded-md border border-accent text-accent bg-transparent hover:bg-teal-500 hover:text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled="@(currentPage == pageCount)"
+                    @onclick="NextPage">
+                Next ›
+            </button>
+        </div>
+    }
+}

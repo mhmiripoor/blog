@@ -1,0 +1,38 @@
+﻿@using BoneLog.Blazor.Dtos
+@using System.Text.Json
+@inject HttpClient Http
+@inject NavigationManager Nav;
+
+<nav class="@CssClass">
+    @if(items == null)
+    {
+        <p>Loading Items ...</p>
+    }
+    else
+    {
+        @foreach(var item in items)
+        {
+            <a class="hover:text-teal-500 transition-colors" href="@item.Url">@item.Title</a>
+        }
+    }
+    @ChildContent
+</nav>
+
+@code {
+    [Parameter]
+    public string CssClass { get; set; } = ""; 
+    
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    private List<NavItemDto>? items;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var json = await Http.GetStringAsync($"{Nav.BaseUri}/data/navItems.json");
+        items = JsonSerializer.Deserialize<List<NavItemDto>>(json,new JsonSerializerOptions()
+        {
+            PropertyNameCaseInsensitive = true,
+        });
+    }
+}

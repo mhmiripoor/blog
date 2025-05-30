@@ -1,0 +1,39 @@
+﻿@page "/about"
+
+<div class="max-w-3xl mx-auto px-4 py-8 text-center">
+
+    @if(isLoading)
+    {
+        <Loading />
+    }
+    else if(!aboutExists)
+    {
+        <NotFound />
+    }
+    else
+    {
+        @if(header is not null)
+        {
+            <div class="mb-6">
+                @if(!string.IsNullOrWhiteSpace(header.Avatar))
+                {
+                    <div class="mx-auto w-32 h-32 rounded-full overflow-hidden border border-neutral-300 dark:border-white/20">
+                        <img src="@($"{Nav.BaseUri}{header.Avatar}")"
+                             alt="Avatar"
+                             class="w-full h-full object-cover" />
+                    </div>
+                }
+
+                <h1 class="mt-4 text-2xl font-bold text-inherit">@header.Name</h1>
+
+                <div class="border-t border-neutral-300 dark:border-white/20 my-4 w-1/2 mx-auto"></div>
+
+                <p class="text-sm text-gray-600 dark:text-gray-300">@header.Headline</p>
+            </div>
+        }
+
+        <div class="prose dark:prose-invert max-w-none font-serif text-inherit text-left">
+            @((MarkupString)htmlContent)
+        </div>
+    }
+</div>
