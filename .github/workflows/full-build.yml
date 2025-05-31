@@ -29,6 +29,9 @@ jobs:
     - name: Change base href in index.html
       run: sed -i 's|<base href="/" />|<base href="/BoneLog/" />|g' release/wwwroot/index.html
 
+    - name: Change base href in 404.html
+      run: sed -i 's|<base href="/" />|<base href="/BoneLog/" />|g' release/wwwroot/404.html
+
     - name: Add .nojekyll
       run: touch release/wwwroot/.nojekyll
 

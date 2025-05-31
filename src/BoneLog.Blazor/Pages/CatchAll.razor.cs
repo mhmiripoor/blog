@@ -6,7 +6,6 @@ namespace BoneLog.Blazor.Pages;
 public partial class CatchAll : ComponentBase
 {
     [Inject] HttpClient Http { get; set; } = default!;
-    [Inject] NavigationManager Nav { get; set; } = default!;
 
     [Parameter]
     public string slug { get; set; } = null!;
@@ -17,7 +16,7 @@ public partial class CatchAll : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        var filePath = $"{Nav.BaseUri}/{slug}.md";
+        var filePath = $"{slug}.md";
 
         try
         {

@@ -1,4 +1,5 @@
 ﻿using BoneLog.Blazor.Dtos;
+using BoneLog.Blazor.Services;
 using Microsoft.AspNetCore.Components;
 using System.Text.Json;
 
@@ -7,7 +8,7 @@ namespace BoneLog.Blazor.Pages;
 public partial class Home: ComponentBase
 {
     [Inject] HttpClient Http { get; set; } = default!;
-    [Inject] NavigationManager Nav { get; set; } =default!;
+    [Inject] SiteSettingsService SiteSettings{ get; set; } = default!;
 
     private List<PostIndexDto>? posts;
     private List<PostIndexDto>? filteredPosts;
@@ -19,7 +20,8 @@ public partial class Home: ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        var json = await Http.GetStringAsync($"{Nav.BaseUri}data/posts.json");
+        await SiteSettings.LoadAsync();
+        var json = await Http.GetStringAsync($"data/posts.json");
 
         posts = JsonSerializer.Deserialize<List<PostIndexDto>>(json,new JsonSerializerOptions()
         {
@@ -87,7 +89,7 @@ public partial class Home: ComponentBase
     }
     private async Task ReloadPosts()
     {
-        var url = $"{Nav.BaseUri}data/posts.json?nocache={Guid.NewGuid()}";
+        var url = $"data/posts.json?nocache={Guid.NewGuid()}";
         var json = await Http.GetStringAsync(url);
 
         var options = new JsonSerializerOptions

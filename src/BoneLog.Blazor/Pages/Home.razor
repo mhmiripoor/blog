@@ -1,5 +1,7 @@
 ﻿@page "/"
 
+<PageTitle>@SiteSettings.Settings?.Title</PageTitle>
+
 <div class="flex items-center mb-6 w-full max-w-full
             border border-white
             rounded-md
@@ -46,8 +48,8 @@ else
         {
             <PostPreview Title="@postWithIndex.post.Title"
             Description="@postWithIndex.post.ShortDescription"
-                         Url="@($"{Nav.BaseUri}post/{postWithIndex.post.FileName}")"
-                         ThumbnailUrl="@($"{Nav.BaseUri}/{postWithIndex.post.Thumbnail}")"
+                         Url="@($"post/{postWithIndex.post.FileName}")"
+                         ThumbnailUrl="@postWithIndex.post.Thumbnail"
                          PublishDate="@postWithIndex.post.Date"
                          Tags="@postWithIndex.post.Tags.ToList()"
                          ImageOnRight="@(postWithIndex.i % 2 == 1)" />

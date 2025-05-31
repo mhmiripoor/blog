@@ -1,5 +1,7 @@
 ﻿@page "/about"
 
+<PageTitle>About</PageTitle>
+
 <div class="max-w-3xl mx-auto px-4 py-8 text-center">
 
     @if(isLoading)
@@ -18,7 +20,7 @@
                 @if(!string.IsNullOrWhiteSpace(header.Avatar))
                 {
                     <div class="mx-auto w-32 h-32 rounded-full overflow-hidden border border-neutral-300 dark:border-white/20">
-                        <img src="@($"{Nav.BaseUri}{header.Avatar}")"
+                        <img src="@header.Avatar"
                              alt="Avatar"
                              class="w-full h-full object-cover" />
                     </div>

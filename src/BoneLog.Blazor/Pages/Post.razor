@@ -1,5 +1,6 @@
 ﻿@page "/post/{PostName}"
 
+<PageTitle>@(header != null  ? header.Title : "Post")</PageTitle>
 
 <div class="max-w-3xl mx-auto px-4 py-8">
 
@@ -33,7 +34,7 @@
              @if(!string.IsNullOrWhiteSpace(header.Cover))
              {
                 <div class="mb-8">
-                    <img src="@($"{Nav.BaseUri}{header.Cover}")" alt="Post image"  class="w-full max-h-[400px] object-cover rounded-xl border border-neutral-200 dark:border-white/10" />
+                    <img src="@header.Cover" alt="Post image"  class="w-full max-h-[400px] object-cover rounded-xl border border-neutral-200 dark:border-white/10" />
                  </div>
              }
         }

@@ -9,7 +9,6 @@ public partial class Post : ComponentBase
 {
     [Inject] HttpClient Http { get; set; } = default!;
     [Inject] IJSRuntime JS { get; set; } = default!;
-    [Inject] NavigationManager Nav { get; set; } = default!;
 
     [Parameter]
     public string PostName { get; set; } = null!;
@@ -21,7 +20,7 @@ public partial class Post : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await Http.GetAsync($"{Nav.BaseUri}/data/posts/{PostName}.md");
+        var response = await Http.GetAsync($"data/posts/{PostName}.md");
         if(response.IsSuccessStatusCode)
         {
             isLoading = false;
