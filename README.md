@@ -34,4 +34,8 @@ Got an idea or feature request? Open a PR and let’s make it happen.
 
 ## Features in progress:
 - Support for external blog post sources
-- Support for external image hosting
+- Sorting
+- Categorize posts
+- Tags Page
+- Metadata handling
+- And more ... 
