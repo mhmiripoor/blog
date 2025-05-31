@@ -1,9 +1,9 @@
-# BloneLog
+# BoneLOG
 ### Easy to use, Free for all
 ---
 ## What's this?
 Wanna spin up a small blog on GitHub Pages real quick and post your stuff with zero hassle?
-BloneLog is made just for that.
+BoneLOG is made just for that.
 
 Just write your posts in Markdown, push them, and boom — they go live automatically.
 
