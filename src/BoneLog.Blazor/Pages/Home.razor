@@ -3,32 +3,33 @@
 <PageTitle>@SiteSettings.Settings?.Title</PageTitle>
 
 <div class="flex items-center mb-6 w-full max-w-full
-            border border-white
-            rounded-md
-            transition-colors duration-200
-            hover:border-white">
+            rounded-xl overflow-hidden
+            border border-neutral-300 dark:border-white/10
+            bg-white dark:bg-stone-950
+            transition-colors duration-200">
+
     <button @onclick="ClearSearch"
             title="Clear search input"
-            class="px-4 py-2 border border-accent rounded-l-md text-accent
-                   hover:bg-teal-500 hover:text-white
-                   focus:outline-none focus:ring-2 focus:ring-accent
-                   transition-colors duration-200 shadow-sm hover:shadow-md">
-
+            class="px-4 py-2 bg-indigo-100 text-indigo-700 dark:bg-indigo-950/20 dark:text-indigo-300
+                   border-r border-neutral-300 dark:border-white/10
+                   hover:bg-indigo-200 dark:hover:bg-indigo-900/40
+                   transition-colors duration-200">
         ❌
     </button>
+
     <input type="text"
            value="@searchQuery"
            @oninput="OnSearchInput"
            placeholder="Search posts..."
-           class="flex-grow px-4 py-2 border border-accent bg-transparent text-inherit focus:outline-none rounded-md transition-colors duration-200" />
-
+           class="flex-grow px-4 py-2 bg-transparent text-inherit
+                  focus:outline-none placeholder:text-neutral-500 dark:placeholder:text-neutral-400" />
 
     <button @onclick="ReloadPosts"
             title="Reload posts list from server (bypass cache)"
-            class="px-4 py-2 border border-accent rounded-r-md text-accent
-                   hover:bg-teal-500 hover:text-white
-                   focus:outline-none focus:ring-2 focus:ring-accent
-                   transition-colors duration-200 shadow-sm hover:shadow-md">
+            class="px-4 py-2 bg-indigo-100 text-indigo-700 dark:bg-indigo-950/20 dark:text-indigo-300
+                   border-l border-neutral-300 dark:border-white/10
+                   hover:bg-indigo-200 dark:hover:bg-indigo-900/40
+                   transition-colors duration-200">
         🔄
     </button>
 </div>
@@ -42,12 +43,12 @@ else
 {
     <div class="flex flex-col gap-6">
         @foreach(var postWithIndex in filteredPosts
-                  .Skip((currentPage - 1) * itemsPerPage)
-                  .Take(itemsPerPage)
-                  .Select((post,i) => (post, i)))
+            .Skip((currentPage - 1) * itemsPerPage)
+            .Take(itemsPerPage)
+            .Select((post,i) => (post, i)))
         {
             <PostPreview Title="@postWithIndex.post.Title"
-            Description="@postWithIndex.post.ShortDescription"
+                         Description="@postWithIndex.post.ShortDescription"
                          Url="@($"post/{postWithIndex.post.FileName}")"
                          ThumbnailUrl="@postWithIndex.post.Thumbnail"
                          PublishDate="@postWithIndex.post.Date"
@@ -57,30 +58,52 @@ else
     </div>
     @if(filteredPosts.Count > itemsPerPage)
     {
-        <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mt-10">
-            <button class="px-4 py-2 rounded-md border border-accent text-accent bg-transparent hover:bg-teal-500 hover:text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled="@(currentPage == 1)"
-                    @onclick="PrevPage">
-                ‹ Prev
-            </button>
+        <div class="w-full max-w-md mx-auto mt-10">
+            <div class="grid grid-cols-4 items-center
+                        border border-neutral-300 dark:border-white/10
+                        bg-white dark:bg-stone-950
+                        rounded-md overflow-hidden text-sm">
 
-            <div class="flex items-center space-x-2">
-                <label for="pageInput" class="text-inherit font-medium">Page</label>
-                <input id="pageInput"
-                       type="number"
-                       min="1"
-                       max="@pageCount"
-                       value="@currentPage"
-                       @oninput="OnPageInputChanged"
-                       class="w-16 text-center rounded-md border border-neutral-300 dark:border-neutral-700 bg-transparent text-inherit placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-200 no-spin" />
-                <span class="text-inherit font-semibold">of @pageCount</span>
+                <!-- Prev -->
+                <button class="flex items-center justify-center px-4 py-2 text-indigo-700 dark:text-indigo-300
+                               hover:bg-indigo-100 dark:hover:bg-indigo-900/30
+                               transition-colors duration-200
+                               disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled="@(currentPage == 1)"
+                        @onclick="PrevPage">
+                    ‹ Prev
+                </button>
+
+                <!-- Middle: Page Text + Input + of -->
+                <div class="col-span-2 flex items-center justify-center gap-2 px-2 py-2 font-medium text-neutral-800 dark:text-neutral-200">
+                    <div>Page</div>
+                    <input id="pageInput"
+                           type="number"
+                           min="1"
+                           max="@pageCount"
+                           value="@currentPage"
+                           @oninput="OnPageInputChanged"
+                           class="w-12 text-center rounded-md
+                                  bg-indigo-100 dark:bg-indigo-900/40
+                                  text-black dark:text-white
+                                  border border-transparent focus:border-indigo-500
+                                  focus:outline-none focus:ring-2 focus:ring-indigo-400
+                                  transition-all duration-200 no-spin" />
+                    <div>of @pageCount</div>
+                </div>
+
+                <!-- Next -->
+                <button class="flex items-center justify-center px-4 py-2 text-indigo-700 dark:text-indigo-300
+                               hover:bg-indigo-100 dark:hover:bg-indigo-900/30
+                               transition-colors duration-200
+                               disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled="@(currentPage == pageCount)"
+                        @onclick="NextPage">
+                    Next ›
+                </button>
             </div>
-
-            <button class="px-4 py-2 rounded-md border border-accent text-accent bg-transparent hover:bg-teal-500 hover:text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled="@(currentPage == pageCount)"
-                    @onclick="NextPage">
-                Next ›
-            </button>
         </div>
+
+
     }
 }

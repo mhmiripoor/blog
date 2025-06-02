@@ -24,7 +24,9 @@
                     <div class="flex flex-wrap gap-2">
                         @foreach(var tag in header.Tags)
                         {
-                            <span class="bg-accent text-inherit px-3 py-1 rounded-full text-xs">@tag</span>
+                          <span class="inline-block bg-indigo-100 text-indigo-700 dark:bg-indigo-950/20 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-500/30 px-3 py-1 rounded-full text-sm font-medium">
+                               @tag
+                          </span>           
                         }
                     </div>
                 }
@@ -42,5 +44,4 @@
             @((MarkupString)htmlContent)
         </div>
 }
-
 </div>

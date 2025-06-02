@@ -2,4 +2,5 @@
 
 
 public record NavItemDto(string Title,string Url);
-public record SiteSettingsDto(string Title,List<NavItemDto> NavItems);
+public record SocialLinkDto(string Url,string IconClass);
+public record SiteSettingsDto(string Title,List<NavItemDto>? NavItems,List<SocialLinkDto>? SocialLinks);

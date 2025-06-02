@@ -19,6 +19,6 @@ public class SiteSettingsService
         if(Settings != null)
             return;
 
-        Settings = await _http.GetFromJsonAsync<SiteSettingsDto>($"data/site-settings.json") ?? new("BoneLOG",new());
+        Settings = await _http.GetFromJsonAsync<SiteSettingsDto>($"data/site-settings.json") ?? new("BoneLOG",[],[]);
     }
 }
